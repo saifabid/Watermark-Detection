@@ -16,10 +16,10 @@ import (
 var (
 	tempFileName      = "./temp/temp.jpeg"
 	croppedFileName   = "./temp/crop.jpeg"
-	sample            = "girl-on-bed.jpeg"
+	sample            = "mike.jpeg"
 	jsonFileTop       = "badUsersTOP.txt"
 	jsonFileBottom    = "badUsersBOTTOM.txt"
-	emberAPI          = "http://api.emberchatapp.com/api/v1/persona?offset=0&max=501"
+	imageAPI          = "Insert your API url here"
 	badPicturesTop    []faulty
 	badPicturesBottom []faulty
 	lowPoint          float64
@@ -31,28 +31,18 @@ type faulty struct {
 	markLocation string
 }
 type description struct {
-	Id           string   `json:"_id"`
-	Rev          string   `json:"_rev" `
-	Name         string   `json: "name"`
-	Pictures     []string `json:"pictures"`
-	Age          string   `json:"age"`
-	Location     string   `json:"location"`
-	Weight       int      `json:"weight"`
-	Height       int      `json:"height"`
-	Measurements string   `json:"measurements"`
-	Type         string   `json:"type"`
-	Active       bool     `json:"active"`
-	Created      string   `json:"created"`
-	Utc          int      `json:"utc"`
-	ChatterId    string   `json:"chatterId"`
-	Preset       string   `json:"string"`
-	Lastactive   string   `lastactive:"lastactive"`
-	Snap         bool     `json:"snap"`
+	/*
+
+
+	   define the json data fields your API will contain
+
+	*/
 }
 
 func filterImg(fileName string) (clean bool) {
 
 	out := gosseract.Must(map[string]string{"src": fileName})
+	fmt.Println(out)
 	out = strings.TrimSpace(out)
 	if len(out) > 3 {
 
@@ -71,7 +61,7 @@ func filterImg(fileName string) (clean bool) {
 
 func getUsers(api string) (users []description) {
 
-	resp, err := http.Get(emberAPI)
+	resp, err := http.Get(imageAPI)
 	checkErr(err)
 	body, _ := ioutil.ReadAll(resp.Body)
 
@@ -162,7 +152,8 @@ func checkErr(err error) {
 	}
 }
 func main() {
-	users := getUsers(emberAPI)
+
+	users := getUsers(imageAPI)
 
 	for _, user := range users {
 		pic := user.Pictures[0]
